@@ -53,20 +53,17 @@ class Mailing(models.Model):
     status = models.CharField(
         max_length=100, verbose_name="Статус", help_text="Укажите статус рассылки"
     )
-    client = models.ForeignKey(
+    client = models.ManyToManyField(
         Client,
         verbose_name="Клиенты",
-        on_delete=models.SET_NULL,
         related_name="mailing",
-        many_to_one=False,
-        many_to_many=True,
-        rel_class=ManyToManyRel,
     )
     message = models.ForeignKey(
         Message,
         verbose_name="Сообщения",
         on_delete=models.SET_NULL,
         related_name="mailing",
+        **NULLABLE
     )
 
     class Meta:
@@ -83,6 +80,11 @@ class Attempt(models.Model):
         verbose_name="Рассылка",
         help_text="Выберите рассылку",
         related_name="attempt",
+        **NULLABLE
     )
     status = models.BooleanField(default=False, verbose_name="Статус попытки")
     response = models.TextField(verbose_name="Ответ почтового сервера", **NULLABLE)
+
+    class Meta:
+        verbose_name = "Попытка отправки"
+        verbose_name_plural = "Попытки отправки"
