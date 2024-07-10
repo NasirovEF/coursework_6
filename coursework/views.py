@@ -20,6 +20,7 @@ class ClientDetailView(DetailView):
     model = Client
 
 
+
 class ClientUpdateView(UpdateView):
     """Вьюшка редактирования клиента"""
     model = Client
