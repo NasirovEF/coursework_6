@@ -1,0 +1,30 @@
+{% extends 'coursework/base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <div class="card text-center m-4">
+                <div class="card-header"><strong>
+                    Тема: {{ object.subject }}
+                </strong></div>
+                <div class="card-body">
+                    {{ object.body }}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'coursework:message_list' %}" class="btn btn-outline-primary">
+                        Назад
+                    </a>
+                     <a href="{% url 'coursework:message_update' object.pk %}" class="btn btn-outline-primary">
+                        Редактировать
+                    </a>
+                     <a href="{% url 'coursework:message_delete' object.pk %}" class="btn btn-outline-danger">
+                        Удалить
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+{% endblock %}

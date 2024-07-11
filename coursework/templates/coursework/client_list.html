@@ -3,16 +3,16 @@
 <a class="btn btn-outline-primary my-4 mx-4" href="{% url 'coursework:client_create' %}">Добавить клиента</a>
 <div class="row">
     {% for client in object_list %}
-    <div class="col-3">
-    <div class="card text-center m-4">
+    <div class="col-4">
+    <div class="card text-center mx-4">
         <div class="card-body">
             <h5>{{ client.name }}</h5>
             <h6 class="subtitle mb-2 text-body-secondary">Email: {{ client.email }}</h6>
             <p><em>
                 {% if client.comment %}
-                {{ client.comment }}
+                "{{ client.comment }}"
                 {% else %}
-                Комментарии отсутствуют
+                "Комментарии отсутствуют"
                 {% endif %}
             </em></p>
         </div>
