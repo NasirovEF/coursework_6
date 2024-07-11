@@ -39,20 +39,44 @@ class Message(models.Model):
         verbose_name_plural = "Сообщения"
 
 
-class Mailing(models.Model):
-    """Модель рассылки"""
+class MailingStatus(models.Model):
+    """Модель доп. настроек статуса рассылки"""
+    status = models.CharField(max_length=100, verbose_name="Статус рассылки")
 
-    date_and_time = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата и время первой отправки"
-    )
+    class Meta:
+        verbose_name = "Статус рассылки"
+        verbose_name_plural = "Статусы рассылки"
+
+
+class MailingFrequency(models.Model):
+    """Модель доп. настроек периодичности рассылки"""
     frequency = models.CharField(
         max_length=150,
         verbose_name="Периодичность",
         help_text="Укажите периодичность рассылки",
     )
-    status = models.CharField(
-        max_length=100, verbose_name="Статус", help_text="Укажите статус рассылки"
+
+    class Meta:
+        verbose_name = "Периодичность рассылки"
+        verbose_name_plural = "Периодичности рассылки"
+
+
+class Mailing(models.Model):
+    """Модель рассылки"""
+
+    date_and_time = models.DateTimeField(
+        verbose_name="Дата и время первой отправки"
     )
+    frequency = models.ForeignKey(
+        MailingFrequency,
+        verbose_name="Периодичность",
+        on_delete=models.CASCADE,
+        related_name="mailing"
+    )
+    enable = models.BooleanField(
+        default=False, verbose_name="Активность"
+    )
+    status = models.ForeignKey(MailingStatus, on_delete=models.CASCADE, verbose_name="Статус", related_name="mailing")
     client = models.ManyToManyField(
         Client,
         verbose_name="Клиенты",
