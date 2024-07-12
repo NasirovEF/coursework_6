@@ -19,6 +19,9 @@ class Client(models.Model):
         **NULLABLE
     )
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = "Клиент"
         verbose_name_plural = "Клиенты"
@@ -34,6 +37,9 @@ class Message(models.Model):
         verbose_name="Текст письма", help_text="Укажите текст письма"
     )
 
+    def __str__(self):
+        return self.subject
+
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
@@ -42,6 +48,9 @@ class Message(models.Model):
 class MailingStatus(models.Model):
     """Модель доп. настроек статуса рассылки"""
     status = models.CharField(max_length=100, verbose_name="Статус рассылки")
+
+    def __str__(self):
+        return self.status
 
     class Meta:
         verbose_name = "Статус рассылки"
@@ -56,6 +65,9 @@ class MailingFrequency(models.Model):
         help_text="Укажите периодичность рассылки",
     )
 
+    def __str__(self):
+        return self.frequency
+
     class Meta:
         verbose_name = "Периодичность рассылки"
         verbose_name_plural = "Периодичности рассылки"
@@ -65,28 +77,32 @@ class Mailing(models.Model):
     """Модель рассылки"""
 
     date_and_time = models.DateTimeField(
-        verbose_name="Дата и время первой отправки"
+        verbose_name="Дата и время первой отправки",
+        **NULLABLE
     )
     frequency = models.ForeignKey(
         MailingFrequency,
         verbose_name="Периодичность",
         on_delete=models.CASCADE,
-        related_name="mailing"
+        related_name="mailing",
+        help_text="Выберите периодичность"
     )
     enable = models.BooleanField(
         default=False, verbose_name="Активность"
     )
-    status = models.ForeignKey(MailingStatus, on_delete=models.CASCADE, verbose_name="Статус", related_name="mailing")
+    status = models.ForeignKey(MailingStatus, on_delete=models.CASCADE, verbose_name="Статус", related_name="mailing", **NULLABLE)
     client = models.ManyToManyField(
         Client,
         verbose_name="Клиенты",
         related_name="mailing",
+        help_text="Выберите клиентов. (Для отмены зажмите CTRL и выберите клиента"
     )
     message = models.ForeignKey(
         Message,
         verbose_name="Сообщения",
         on_delete=models.SET_NULL,
         related_name="mailing",
+        help_text="Выберете сообщения для отправки",
         **NULLABLE
     )
 

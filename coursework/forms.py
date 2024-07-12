@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import BooleanField
-from coursework.models import Client, Message
+from coursework.models import Client, Message, Mailing
 
 
 class StileFormMixin:
@@ -63,3 +63,9 @@ class MessageForm(StileFormMixin, forms.ModelForm):
             if word in cleaned_data_body.lower():
                 raise forms.ValidationError("Нельзя использовать запрещенные слова")
         return cleaned_data_body
+
+
+class MailingForm(StileFormMixin, forms.ModelForm):
+    class Meta:
+        model = Mailing
+        exclude = ("enable", "date_and_time", "status",)

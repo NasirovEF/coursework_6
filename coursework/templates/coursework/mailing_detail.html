@@ -1,0 +1,40 @@
+{% extends 'coursework/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-8">
+        <div class="card text-center">
+            <div class="card-header">
+                Подробная информация о рассылке
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'coursework:message_detail' object.message.pk %}">{{ object.message.subject }}</a> </h5>
+                {% for client in object.client.all %}
+                <div class="card-text">{{ client }}</div>
+                {% endfor %}
+                <p class="card-text">Периодичность рассылки: {{ object.frequency }}</p>
+                <p class="card-text">Статус рассылки: {{ object.status }}</p>
+                {% if object.enable %}
+                <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-danger">Завершить рассылку</a>
+                {% else %}
+                <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-success">Запустить рассылку</a>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+               <a href="{% url 'coursework:mailing_list' %}" class="btn btn-outline-primary">
+                    Назад
+                </a>
+                <a href="{% url 'coursework:mailing_update' object.pk %}" class="btn btn-outline-primary">
+                    Редактировать
+                </a>
+                <a href="{% url 'coursework:mailing_delete' object.pk %}" class="btn btn-outline-danger">
+                    Удалить
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+    </div>
+</div>
+{% endblock %}

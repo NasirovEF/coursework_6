@@ -2,7 +2,8 @@ from django.urls import path
 
 from coursework.apps import CourseworkConfig
 from coursework.views import FirstPageView, ClientListView, ClientUpdateView, ClientDeleteView, ClientCreateView, \
-    MessageListView, MessageCreateView, MessageDetailView, MessageUpdateView, MessageDeleteView
+    MessageListView, MessageCreateView, MessageDetailView, MessageUpdateView, MessageDeleteView, MailingListView, \
+    MailingCreateView, MailingDetailView, MailingUpdateView, MailingDeleteView, activated_mailing
 
 app_name = CourseworkConfig.name
 
@@ -17,4 +18,10 @@ urlpatterns = [
     path('message_detail/<int:pk>', MessageDetailView.as_view(), name='message_detail'),
     path('message_update/<int:pk>', MessageUpdateView.as_view(), name='message_update'),
     path('message_delete/<int:pk>', MessageDeleteView.as_view(), name='message_delete'),
+    path('mailing_list/', MailingListView.as_view(), name='mailing_list'),
+    path('mailing_create/', MailingCreateView.as_view(), name='mailing_create'),
+    path('mailing_detail/<int:pk>', MailingDetailView.as_view(), name='mailing_detail'),
+    path('mailing_update/<int:pk>', MailingUpdateView.as_view(), name='mailing_update'),
+    path('mailing_delete/<int:pk>', MailingDeleteView.as_view(), name='mailing_delete'),
+    path('activated_mailing/<int:pk>', activated_mailing, name='activated_mailing'),
 ]
