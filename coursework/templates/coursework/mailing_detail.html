@@ -4,22 +4,24 @@
     <div class="col-2">
     </div>
     <div class="col-8">
-        <div class="card text-center">
+        <div class="card text-center m-4">
             <div class="card-header">
-                Подробная информация о рассылке
+                <strong>Подробная информация о рассылке</strong>
             </div>
             <div class="card-body">
-                <h5 class="card-title"><a href="{% url 'coursework:message_detail' object.message.pk %}">{{ object.message.subject }}</a> </h5>
-                {% for client in object.client.all %}
-                <div class="card-text">{{ client }}</div>
-                {% endfor %}
-                <p class="card-text">Периодичность рассылки: {{ object.frequency }}</p>
-                <p class="card-text">Статус рассылки: {{ object.status }}</p>
+                <h5 class="card-title">Тема: <a href="{% url 'coursework:message_detail' object.message.pk %}">{{ object.message.subject }}</a> </h5>
+
+                <div class="card-text"><em>Получатели:</em>{% for client in object.client.all %} {{ client }};  {% endfor %}</div>
+
+                <p class="card-text"><em>Периодичность рассылки:</em> {{ object.frequency }}</p>
+                <p class="card-text"><em>Статус рассылки:</em> {{ object.status }}</p>
                 {% if object.enable %}
                 <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-danger">Завершить рассылку</a>
                 {% else %}
                 <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-success">Запустить рассылку</a>
                 {% endif %}
+                <a href="#" class="btn btn-primary">Информация о попытках
+                    рассылки</a>
             </div>
             <div class="card-footer">
                <a href="{% url 'coursework:mailing_list' %}" class="btn btn-outline-primary">

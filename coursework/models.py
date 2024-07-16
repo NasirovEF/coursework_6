@@ -114,6 +114,8 @@ class Mailing(models.Model):
 class Attempt(models.Model):
     """Модель попытки отправки письма"""
 
+    date_and_time = models.DateTimeField(verbose_name="Дата и время попытки отправки", **NULLABLE)
+
     mailing = models.ForeignKey(
         Mailing,
         on_delete=models.SET_NULL,
