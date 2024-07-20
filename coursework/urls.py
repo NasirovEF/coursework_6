@@ -3,7 +3,7 @@ from django.urls import path
 from coursework.apps import CourseworkConfig
 from coursework.views import FirstPageView, ClientListView, ClientUpdateView, ClientDeleteView, ClientCreateView, \
     MessageListView, MessageCreateView, MessageDetailView, MessageUpdateView, MessageDeleteView, MailingListView, \
-    MailingCreateView, MailingDetailView, MailingUpdateView, MailingDeleteView, activated_mailing
+    MailingCreateView, MailingDetailView, MailingUpdateView, MailingDeleteView, activated_mailing, AttemptListView
 
 app_name = CourseworkConfig.name
 
@@ -24,4 +24,5 @@ urlpatterns = [
     path('mailing_update/<int:pk>', MailingUpdateView.as_view(), name='mailing_update'),
     path('mailing_delete/<int:pk>', MailingDeleteView.as_view(), name='mailing_delete'),
     path('activated_mailing/<int:pk>', activated_mailing, name='activated_mailing'),
+    path('attempt_list/<int:pk>', AttemptListView.as_view(), name='attempt_list'),
 ]

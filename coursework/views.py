@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy, reverse
 from coursework.forms import ClientForm, MessageForm, MailingForm
-from coursework.models import Client, Message, Mailing, MailingStatus
+from coursework.models import Client, Message, Mailing, MailingStatus, Attempt
 
 
 class FirstPageView(View):
@@ -121,3 +121,13 @@ def activated_mailing(request, pk):
     mailing.save()
 
     return redirect(reverse('coursework:mailing_detail', args=[pk]))
+
+
+class AttemptListView(ListView):
+    """Вьюшка попытки отправки рассылки"""
+    model = Attempt
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(mailing=self.kwargs['pk'])
+        return queryset

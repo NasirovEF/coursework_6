@@ -1,0 +1,31 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<table class="table text-center m-4">
+    <thead>
+    <tr>
+        <th scope="col" class="col-3">Дата и время отправки</th>
+        <th scope="col" class="col-3">Статус попытки</th>
+        <th scope="col" class="col-6">Ответ почтового сервера</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for attempt in object_list %}
+    <tr>
+        <td>{{ attempt.date_and_time }}</td>
+        {% if attempt.status == True %}
+        <td>Успешно</td>
+        {% else %}
+        <td class="table-danger">Ошибка</td>
+        {% endif %}
+        {% if attempt.response %}
+        <td class="table-danger">{{ attempt.response }}</td>
+        {% else %}
+        <td>Ответ отсутствует</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

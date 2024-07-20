@@ -20,7 +20,7 @@
                 {% else %}
                 <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-success">Запустить рассылку</a>
                 {% endif %}
-                <a href="#" class="btn btn-primary">Информация о попытках
+                <a href="{% url 'coursework:attempt_list' object.pk %}" class="btn btn-primary">Информация о попытках
                     рассылки</a>
             </div>
             <div class="card-footer">

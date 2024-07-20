@@ -24,8 +24,12 @@ def send_mailing(frequency, **delta):
                         subject=mailing.message.subject,
                         message=mailing.message.body,
                         from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[client.email for client in mailing.client.all()]
+                        recipient_list=[client.email for client in mailing.client.all()],
+                        fail_silently=False,
                 )
+                if mailing.date_and_time is None:
+                    mailing.date_and_time = current_datetime
+                    mailing.save()
                 Attempt.objects.create(date_and_time=current_datetime, mailing=mailing, status=True)
             except smtplib.SMTPException as e:
                 response_error = f"Ошибка при отправке рассылки: {e}"

@@ -106,6 +106,9 @@ class Mailing(models.Model):
         **NULLABLE
     )
 
+    def __str__(self):
+        return f"{self.message.subject} - {self.frequency.frequency}"
+
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
