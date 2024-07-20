@@ -1,0 +1,29 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="row">
+    <div class="col-4">
+    </div>
+    <div class="col-4">
+        <form method="post" enctype="multipart/form-data">
+            <div class="card">
+                <div class="card-header text-center">
+                    Сброс пароля
+                </div>
+                <div class="card-body">
+                    <p class="text-center">
+                        Пароль успешно изменен и направлен на указанную вами почту!
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-outline-primary" href="{% url 'user:login' %}">
+                        Закрыть
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-4">
+    </div>
+</div>
+{% endblock %}

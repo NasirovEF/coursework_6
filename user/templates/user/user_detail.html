@@ -1,0 +1,24 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{{ user.avatar | media_filter }}" class="img-fluid rounded-start">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ user.email }}</h5>
+                <p class="card-text">Страна: {{ user.country }}</p>
+                <p class="card-text">Телефон: {{ user.phone_number }}</p>
+            </div>
+            <a class="btn btn-outline-primary" href="{% url 'user:account-update' user.pk %}">
+                        Редактировать
+                    </a>
+            <a class="btn btn-outline-danger" href="{% url 'user:pass_change' user.pk %}">
+                        Сменить пароль
+                    </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

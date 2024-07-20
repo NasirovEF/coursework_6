@@ -23,6 +23,7 @@ from django.conf import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("coursework.urls", namespace="coursework")),
+    path("", include("user.urls", namespace="user")),
 ]
 
 if settings.DEBUG:
