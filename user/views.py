@@ -17,7 +17,7 @@ from user.forms import (
 )
 from user.services import add_password
 from user.models import User
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, ListView, View
 import secrets
 
 
@@ -62,6 +62,10 @@ class UserDetailView(DetailView):
     model = User
 
 
+class UserListView(ListView):
+    model = User
+
+
 class UserUpdateView(UpdateView):
     model = User
     form_class = UserUpdateForm
@@ -94,3 +98,14 @@ class UserPasswordChangeView(PasswordChangeView):
 
     def get_success_url(self):
         return reverse("user:login")
+
+
+def blocking_user(request, pk):
+    """Вьюшка блокировки пользователя"""
+    user = get_object_or_404(User, pk=pk)
+    if user.is_blocking:
+        user.is_blocking = False
+    else:
+        user.is_blocking = True
+    user.save()
+    return redirect(reverse("user:user_list"))

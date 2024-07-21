@@ -15,7 +15,7 @@ class User(AbstractUser):
     )
     phone_number = models.CharField(max_length=30, verbose_name="Номер телефона")
     country = models.CharField(max_length=50, verbose_name="Страна")
-
+    is_blocking = models.BooleanField(default=False, verbose_name="Статус блокировки")
     token = models.CharField(max_length=100, verbose_name="Токен", **NULLABLE)
 
     USERNAME_FIELD = "email"
@@ -24,6 +24,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+        permissions = [("can_blocking", "Может заблокировать пользователя")]
 
     def __str__(self):
         return self.email

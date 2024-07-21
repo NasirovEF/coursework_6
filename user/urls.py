@@ -7,7 +7,7 @@ from user.views import (
     UserDetailView,
     UserUpdateView,
     UserPasswordResetView,
-    UserPasswordChangeView,
+    UserPasswordChangeView, UserListView, blocking_user,
 )
 from django.contrib.auth.views import (
     LogoutView,
@@ -41,5 +41,15 @@ urlpatterns = [
         "pass_change/<int:pk>",
         UserPasswordChangeView.as_view(template_name="user/pass_change.html"),
         name="pass_change",
+    ),
+    path(
+        "user_list/",
+        UserListView.as_view(),
+        name="user_list",
+    ),
+    path(
+        "user_blocking/<int:pk>",
+        blocking_user,
+        name="user_blocking",
     ),
 ]

@@ -12,6 +12,13 @@ from user.models import User
 class UserLoginViewForm(StileFormMixin, AuthenticationForm):
     model = User
     fields = ("email", "password")
+    error_message = {"isblock": "Вы заблокированы. Обратитесь к администратору"}
+
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if user.is_blocking:
+            raise forms.ValidationError(self.error_message["isblock"], code="isblock")
+
 
 
 class UserRegisterForm(StileFormMixin, UserCreationForm):
