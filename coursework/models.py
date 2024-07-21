@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models.fields.reverse_related import ManyToManyRel
 
+from user.models import User
+
 NULLABLE = {"blank": True, "null": True}
 
 
@@ -17,6 +19,13 @@ class Client(models.Model):
         verbose_name="Комментарий",
         help_text="Оставьте комментарий (по желанию)",
         **NULLABLE
+    )
+    created_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        verbose_name="Пользователь создавший",
+        related_name="client",
+        **NULLABLE,
     )
 
     def __str__(self):
@@ -35,6 +44,13 @@ class Message(models.Model):
     )
     body = models.TextField(
         verbose_name="Текст письма", help_text="Укажите текст письма"
+    )
+    created_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        verbose_name="Пользователь создавший",
+        related_name="message",
+        **NULLABLE,
     )
 
     def __str__(self):
@@ -104,6 +120,13 @@ class Mailing(models.Model):
         related_name="mailing",
         help_text="Выберете сообщения для отправки",
         **NULLABLE
+    )
+    created_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        verbose_name="Пользователь создавший",
+        related_name="mailing",
+        **NULLABLE,
     )
 
     def __str__(self):

@@ -3,6 +3,8 @@ from django.views.generic import View, ListView, DetailView, UpdateView, DeleteV
 from django.urls import reverse_lazy, reverse
 from coursework.forms import ClientForm, MessageForm, MailingForm
 from coursework.models import Client, Message, Mailing, MailingStatus, Attempt
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import permission_required
 
 
 class FirstPageView(View):
@@ -10,41 +12,57 @@ class FirstPageView(View):
         return render(request, "coursework/first_page.html")
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     """Вьюшка списка клиентов"""
     model = Client
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Client.objects.all()
+        return Client.objects.filter(created_user=self.request.user)
 
-class ClientUpdateView(UpdateView):
+
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     """Вьюшка редактирования клиента"""
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy("coursework:client_list")
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     """Вьюшка создания клиента"""
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy("coursework:client_list")
 
+    def form_valid(self, form):
+        client = form.save()
+        client.created_user = self.request.user
+        form.save()
+        return super().form_valid(form)
 
-class ClientDeleteView(DeleteView):
+
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     success_url = reverse_lazy("coursework:client_list")
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
     """Вьюшка списка сообщений"""
     model = Message
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Message.objects.all()
+        return Message.objects.filter(created_user=self.request.user)
 
-class MessageDetailView(DetailView):
+
+class MessageDetailView(LoginRequiredMixin, DetailView):
     """Вьюшка одного сообщения"""
     model = Message
 
 
-class MessageCreateView(CreateView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
     """Вьюшка создания нового сообщения"""
     model = Client
     form_class = MessageForm
@@ -52,8 +70,14 @@ class MessageCreateView(CreateView):
     def get_success_url(self):
         return reverse('coursework:message_detail', args=[self.object.pk])
 
+    def form_valid(self, form):
+        message = form.save()
+        message.created_user = self.request.user
+        form.save()
+        return super().form_valid(form)
 
-class MessageUpdateView(UpdateView):
+
+class MessageUpdateView(LoginRequiredMixin, UpdateView):
     """Вьюшка редактирования сообщения"""
     model = Message
     form_class = MessageForm
@@ -62,18 +86,23 @@ class MessageUpdateView(UpdateView):
         return reverse('coursework:message_detail', args=[self.object.pk])
 
 
-class MessageDeleteView(DeleteView):
+class MessageDeleteView(LoginRequiredMixin, DeleteView):
     """Вьюшка удаления сообщения"""
     model = Message
     success_url = reverse_lazy("coursework:message_list")
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     """Вьюшка списка рассылок"""
     model = Mailing
 
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.has_perm("coursework.view_mailing"):
+            return Mailing.objects.all()
+        return Mailing.objects.filter(created_user=self.request.user)
 
-class MailingCreateView(CreateView):
+
+class MailingCreateView(LoginRequiredMixin, CreateView):
     """Вьюшка создания новой рассылки"""
     model = Mailing
     form_class = MailingForm
@@ -84,11 +113,12 @@ class MailingCreateView(CreateView):
     def form_valid(self, form):
         mailing = form.save()
         mailing.status = MailingStatus.objects.get(status="Создана")
+        mailing.created_user = self.request.user
         form.save()
         return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     """Вьюшка редактирования рассылки"""
     model = Mailing
     form_class = MailingForm
@@ -97,17 +127,18 @@ class MailingUpdateView(UpdateView):
         return reverse('coursework:mailing_detail', args=[self.object.pk])
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, DetailView):
     """Вьюшка одной рассылки"""
     model = Mailing
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     """Вьюшка удаления рассылки"""
     model = Mailing
     success_url = reverse_lazy("coursework:mailing_list")
 
 
+@permission_required("coursework.can_disable_mailing")
 def activated_mailing(request, pk):
     """Вьюшка активации рассылки"""
     mailing = get_object_or_404(Mailing, pk=pk)
@@ -123,7 +154,7 @@ def activated_mailing(request, pk):
     return redirect(reverse('coursework:mailing_detail', args=[pk]))
 
 
-class AttemptListView(ListView):
+class AttemptListView(LoginRequiredMixin, ListView):
     """Вьюшка попытки отправки рассылки"""
     model = Attempt
 

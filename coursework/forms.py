@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import BooleanField
 from coursework.models import Client, Message, Mailing
+from coursework.services import forbidden_words
 
 
 class StileFormMixin:
@@ -22,23 +23,11 @@ class ClientForm(StileFormMixin, forms.ModelForm):
 class MessageForm(StileFormMixin, forms.ModelForm):
     class Meta:
         model = Message
-        fields = "__all__"
+        exclude = ("created_user",)
 
     def clean_subject(self):
         """Проверка применения запрещенных слов в теме письма"""
         cleaned_data_subject = self.cleaned_data.get("subject")
-        forbidden_words = (
-            "казино",
-            "криптовалюта",
-            "крипта",
-            "биржа",
-            "дешево",
-            "бесплатно",
-            "обман",
-            "полиция",
-            "радар",
-        )
-
         for word in forbidden_words:
             if word in cleaned_data_subject.lower():
                 raise forms.ValidationError("Нельзя использовать запрещенные слова")
@@ -47,18 +36,6 @@ class MessageForm(StileFormMixin, forms.ModelForm):
     def clean_body(self):
         """Проверка применения запретных слов в теле письма"""
         cleaned_data_body = self.cleaned_data.get("body")
-        forbidden_words = (
-            "казино",
-            "криптовалюта",
-            "крипта",
-            "биржа",
-            "дешево",
-            "бесплатно",
-            "обман",
-            "полиция",
-            "радар",
-        )
-
         for word in forbidden_words:
             if word in cleaned_data_body.lower():
                 raise forms.ValidationError("Нельзя использовать запрещенные слова")
@@ -68,4 +45,4 @@ class MessageForm(StileFormMixin, forms.ModelForm):
 class MailingForm(StileFormMixin, forms.ModelForm):
     class Meta:
         model = Mailing
-        exclude = ("enable", "date_and_time", "status",)
+        exclude = ("enable", "date_and_time", "status", "created_user",)

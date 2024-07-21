@@ -6,6 +6,18 @@ from config import settings
 from coursework.models import Mailing, Attempt
 from django.core.mail import send_mail
 
+forbidden_words = (
+            "казино",
+            "криптовалюта",
+            "крипта",
+            "биржа",
+            "дешево",
+            "бесплатно",
+            "обман",
+            "полиция",
+            "радар",
+        )
+
 
 def send_mailing(frequency, **delta):
     """Функция отправки сообщений и создания модели <Попытки отправки>"""

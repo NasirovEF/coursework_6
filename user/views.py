@@ -17,8 +17,9 @@ from user.forms import (
 )
 from user.services import add_password
 from user.models import User
-from django.views.generic import CreateView, DetailView, UpdateView, ListView, View
+from django.views.generic import CreateView, DetailView, UpdateView, ListView
 import secrets
+from django.contrib.auth.decorators import permission_required, user_passes_test
 
 
 class UserLoginView(LoginView):
@@ -65,6 +66,10 @@ class UserDetailView(DetailView):
 class UserListView(ListView):
     model = User
 
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.has_perm("user.view_user"):
+            return User.objects.filter(is_superuser=False)
+
 
 class UserUpdateView(UpdateView):
     model = User
@@ -100,6 +105,7 @@ class UserPasswordChangeView(PasswordChangeView):
         return reverse("user:login")
 
 
+@permission_required("user.can_blocking")
 def blocking_user(request, pk):
     """Вьюшка блокировки пользователя"""
     user = get_object_or_404(User, pk=pk)

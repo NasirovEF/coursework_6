@@ -1,4 +1,5 @@
 {% extends 'coursework/base.html' %}
+{% load my_tags %}
 {% block content %}
 <div class="row">
     <div class="col-2">
@@ -9,16 +10,22 @@
                 <strong>Подробная информация о рассылке</strong>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Тема: <a href="{% url 'coursework:message_detail' object.message.pk %}">{{ object.message.subject }}</a> </h5>
+                {% if user.is_superuser or user == object.created_user %}
+                <h5 class="card-title"><u>Тема:</u> <a href="{% url 'coursework:message_detail' object.message.pk %}">{{ object.message.subject }}</a></h5>
+                {% else %}
+                <h5 class="card-title"><u>Тема:</u> {{ object.message.subject }}</h5>
+                {% endif %}
+                <p class="card-title"><em><u>Содержание письма:</u></em> <strong>{{ object.message.body|slice_description }}</strong></p>
+                <div class="card-text"><em><u>Получатели:</u></em>{% for client in object.client.all %} <strong>{{ client }}</strong>;  {% endfor %}</div>
 
-                <div class="card-text"><em>Получатели:</em>{% for client in object.client.all %} {{ client }};  {% endfor %}</div>
-
-                <p class="card-text"><em>Периодичность рассылки:</em> {{ object.frequency }}</p>
-                <p class="card-text"><em>Статус рассылки:</em> {{ object.status }}</p>
+                <p class="card-text"><em><u>Периодичность рассылки:</u></em> <strong>{{ object.frequency }}</strong></p>
+                <p class="card-text"><em><u>Статус рассылки:</u></em> <strong>{{ object.status }}</strong></p>
+                {% if user.is_superuser or perms.coursework.can_disable_mailing %}
                 {% if object.enable %}
                 <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-danger">Завершить рассылку</a>
                 {% else %}
                 <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-success">Запустить рассылку</a>
+                {% endif %}
                 {% endif %}
                 <a href="{% url 'coursework:attempt_list' object.pk %}" class="btn btn-primary">Информация о попытках
                     рассылки</a>
@@ -27,12 +34,14 @@
                <a href="{% url 'coursework:mailing_list' %}" class="btn btn-outline-primary">
                     Назад
                 </a>
+                {% if user == object.created_user or user.is_superuser %}
                 <a href="{% url 'coursework:mailing_update' object.pk %}" class="btn btn-outline-primary">
                     Редактировать
                 </a>
                 <a href="{% url 'coursework:mailing_delete' object.pk %}" class="btn btn-outline-danger">
                     Удалить
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>
