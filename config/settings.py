@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "user.User"
 
-LOGIN_REDIRECT_URL = "coursework:mailing_list"
+LOGIN_REDIRECT_URL = "blog:general_page"
 
 LOGOUT_REDIRECT_URL = "/"
 

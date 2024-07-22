@@ -1,7 +1,7 @@
 from datetime import datetime
-import pytz
+import pytz, random
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import permission_required, login_required
@@ -10,6 +10,8 @@ from blog.models import Blog
 from pytils.translit import slugify
 
 from config import settings
+from coursework.models import Mailing, Client
+
 
 
 class BlogListView(LoginRequiredMixin, ListView):
@@ -17,7 +19,7 @@ class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
 
     def get_queryset(self):
-        if self.request.user.has_perm('') or self.request.user.is_superuser:
+        if self.request.user.has_perm('blog.can_public') or self.request.user.is_superuser:
             return Blog.objects.all()
         else:
             return Blog.objects.filter(is_public=True)
@@ -83,3 +85,22 @@ def publish_blog(request, slug):
         blog.publicated_at = current_datetime
     blog.save()
     return redirect(reverse('blog:blog_detail', args=[slug]))
+
+
+def general_page(request):
+    """Общая страница сайта"""
+    active_mailing = len(Mailing.objects.filter(enable=True))
+    all_mailing = len(Mailing.objects.all())
+    all_blogs = Blog.objects.filter(is_public=True)
+    random_blog = random.choices(all_blogs, k=3)
+    clients = Client.objects.all()
+    context = {
+        "active_mailing": active_mailing,
+        "all_mailing": all_mailing,
+        "first_blog": random_blog[0],
+        "second_blog": random_blog[1],
+        "third_blog": random_blog[2],
+        "clients": len(clients),
+    }
+    return render(request, "blog/general_page.html", context)
+
