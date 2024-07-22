@@ -1,0 +1,33 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<table class="table text-center m-4">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Email</th>
+      <th scope="col">Что-то</th>
+      <th scope="col">Дополнительно</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in object_list %}
+    {% if user.is_blocking %}
+    <tr class="table-danger">
+    {% else %}
+    <tr>
+    {% endif %}
+      {% if user.is_blocking %}
+      <td><a class="btn btn-outline-primary" href="{% url 'user:user_blocking' user.pk %}">Разблокировать</a></td>
+      {% else %}
+      <td><a class="btn btn-outline-danger" href="{% url 'user:user_blocking' user.pk %}">Заблокировать</a></td>
+      {% endif %}
+      <td>{{ user.email }}</td>
+      <td>#</td>
+      <td>#</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

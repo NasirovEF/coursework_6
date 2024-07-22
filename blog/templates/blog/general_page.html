@@ -1,0 +1,66 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="accordion m-4" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                {{ first_blog.title }}
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+               {{ first_blog.body }}
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                {{ second_blog.title }}
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                {{ second_blog.body }}
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                {{ third_blog.title }}
+            </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                {{ third_blog.body }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <table class="table text-center">
+            <thead>
+            <tr>
+                <th scope="col">Активные рассылки</th>
+                <th scope="col">Всего рассылок</th>
+                <th scope="col">Количество уникальных клиентов рассылок</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ active_mailing }}</td>
+                <td>{{ all_mailing }}</td>
+                <td>{{ clients }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-4"></div>
+    {% endblock %}

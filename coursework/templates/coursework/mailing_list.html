@@ -1,0 +1,32 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<a class="btn btn-outline-primary my-4 mx-4" href="{% url 'coursework:mailing_create' %}">Создать рассылку</a>
+<table class="table text-center m-4">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Тема письма</th>
+      <th scope="col">Периодичность рассылки</th>
+      <th scope="col">Статус рассылки</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for mailing in object_list %}
+    <tr>
+      <td><a class="btn btn-outline-primary" href="{% url 'coursework:mailing_detail' mailing.pk %}">Подробнее</a></td>
+      <td>{{ mailing.message.subject }}</td>
+      <td>{{ mailing.frequency }}</td>
+      {% if mailing.status == 'Создана' %}
+      <td class="table-warning">{{ mailing.status }}</td>
+      {% elif mailing.status == 'Запущена' %}
+      <td class="table-success">{{ mailing.status }}</td>
+      {% else %}
+      <td class="table-danger">{{ mailing.status }}</td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

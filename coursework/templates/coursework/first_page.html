@@ -1,0 +1,18 @@
+{% extends 'coursework/base.html' %}
+{% block content %}
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Сервис управления рассылками</h1>
+        <p class="lead text-body-secondary">Сервис создан для управления рассылками, администрирования и получения статистики.</p>
+        <p>
+        <p class="lead text-body-secondary">Авторизуйтесь или зарегистрируйтесь для начала работы.</p>
+        <p>
+          <a href="{% url 'user:login' %}" class="btn btn-primary my-2">Войти</a>
+          <a href="{% url 'user:registration' %}" class="btn btn-secondary my-2">Регистрация</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
