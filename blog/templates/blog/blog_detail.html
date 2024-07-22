@@ -1,0 +1,38 @@
+{% extends 'coursework/base.html' %}
+{% load my_tags %}
+{% block content %}
+<a href="{% url 'blog:blog_list' %}" class="btn btn-primary m-4">Назад</a>
+<div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-8">
+        <div class="card m-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ object.image | media_filter }}" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ object.title }}</h5>
+                        <p class="card-text">{{ object.body }}</p>
+                        <p class="card-text"><em>Автор: {{ object.author }}</em></p>
+                    </div>
+                    {% if perms.blog.can_public %}
+                    {% if object.is_public %}
+                    <a href="{% url 'blog:blog_public' object.slug %}" class="btn btn-primary">Снять с публикации</a>
+                    {% else %}
+                    <a href="{% url 'blog:blog_public' object.slug %}" class="btn btn-primary">Опубликовать</a>
+                    {% endif %}
+                    {% endif %}
+                    {% if perms.blog.change_blog and perms.blog.delete_blog %}
+                    <a href="{% url 'blog:blog_update' object.slug %}" class="btn btn-outline-primary">Редактировать</a>
+                    <a href="{% url 'blog:blog_delete' object.slug %}" class="btn btn-outline-danger">Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+    </div>
+</div>
+{% endblock %}

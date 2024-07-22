@@ -9,6 +9,7 @@
             <li><a href="{% url 'coursework:client_list' %}" class="text-white">Клиенты</a></li>
             <li><a href="{% url 'coursework:message_list' %}" class="text-white">Сообщения</a></li>
             <li><a href="{% url 'coursework:mailing_list' %}" class="text-white">Рассылки</a></li>
+            <li><a href="{% url 'blog:blog_list' %}" class="text-white">Статьи</a></li>
             {% if perms.user.view_user or user.is_superuser %}
             <li><a href="{% url 'user:user_list' %}" class="text-white">Список пользователей</a></li>
             {% endif %}

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "coursework",
     "django_apscheduler",
     "user",
+    "blog",
 ]
 
 MIDDLEWARE = [
