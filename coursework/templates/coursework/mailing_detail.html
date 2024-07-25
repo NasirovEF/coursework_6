@@ -20,7 +20,7 @@
 
                 <p class="card-text"><em><u>Периодичность рассылки:</u></em> <strong>{{ object.frequency }}</strong></p>
                 <p class="card-text"><em><u>Статус рассылки:</u></em> <strong>{{ object.status }}</strong></p>
-                {% if user.is_superuser or perms.coursework.can_disable_mailing %}
+                {% if user.is_superuser or perms.coursework.can_disable_mailing or user == object.created_user %}
                 {% if object.enable %}
                 <a href="{% url 'coursework:activated_mailing' object.pk %}" class="btn btn-danger">Завершить рассылку</a>
                 {% else %}

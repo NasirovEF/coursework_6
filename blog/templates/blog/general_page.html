@@ -1,6 +1,9 @@
 {% extends 'coursework/base.html' %}
 {% load my_tags %}
 {% block content %}
+{% if not first_blog and not second_blog and not third_blog %}
+    <h2 class="text-center">Нет доступных опубликованных статей</h2>
+{% else %}
 <div class="accordion m-4" id="accordionExample">
     <div class="accordion-item">
         <h2 class="accordion-header">
@@ -42,6 +45,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <div class="row">
     <div class="col-4"></div>
     <div class="col-4">

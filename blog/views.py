@@ -103,22 +103,28 @@ def publish_blog(request, slug):
     return redirect(reverse('blog:blog_detail', args=[slug]))
 
 
-
 @cache_page(60)
 def general_page(request):
     """Общая страница сайта"""
     active_mailing = len(Mailing.objects.filter(enable=True))
     all_mailing = len(Mailing.objects.all())
     all_blogs = Blog.objects.filter(is_public=True)
-    random_blog = random.choices(all_blogs, k=3)
     clients = Client.objects.all()
     context = {
         "active_mailing": active_mailing,
         "all_mailing": all_mailing,
-        "first_blog": random_blog[0],
-        "second_blog": random_blog[1],
-        "third_blog": random_blog[2],
         "clients": len(clients),
     }
+    if all_blogs:
+        random_blog = random.choices(all_blogs, k=3)
+        context["first_blog"] = random_blog[0]
+        context["second_blog"] = random_blog[1]
+        context["third_blog"] = random_blog[2]
+    else:
+        random_blog = []
+        context["first_blog"] = random_blog
+        context["second_blog"] = random_blog
+        context["third_blog"] = random_blog
+
     return render(request, "blog/general_page.html", context)
 

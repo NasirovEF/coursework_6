@@ -4,8 +4,7 @@ from django.urls import reverse_lazy, reverse
 from coursework.forms import ClientForm, MessageForm, MailingForm
 from coursework.models import Client, Message, Mailing, MailingStatus, Attempt
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import permission_required
-
+from django.core.exceptions import PermissionDenied
 
 class FirstPageView(View):
     def get(self, request, *args, **kwargs):
@@ -28,6 +27,13 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ClientForm
     success_url = reverse_lazy("coursework:client_list")
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.created_user or self.request.user.is_superuser:
+            return self.object
+        else:
+            return PermissionDenied
+
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
     """Вьюшка создания клиента"""
@@ -45,6 +51,13 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     success_url = reverse_lazy("coursework:client_list")
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.created_user or self.request.user.is_superuser:
+            return self.object
+        else:
+            return PermissionDenied
 
 
 class MessageListView(LoginRequiredMixin, ListView):
@@ -82,6 +95,13 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
     model = Message
     form_class = MessageForm
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.created_user or self.request.user.is_superuser:
+            return self.object
+        else:
+            return PermissionDenied
+
     def get_success_url(self):
         return reverse('coursework:message_detail', args=[self.object.pk])
 
@@ -90,6 +110,13 @@ class MessageDeleteView(LoginRequiredMixin, DeleteView):
     """Вьюшка удаления сообщения"""
     model = Message
     success_url = reverse_lazy("coursework:message_list")
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.created_user or self.request.user.is_superuser:
+            return self.object
+        else:
+            return PermissionDenied
 
 
 class MailingListView(LoginRequiredMixin, ListView):
@@ -123,6 +150,13 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.created_user or self.request.user.is_superuser:
+            return self.object
+        else:
+            return PermissionDenied
+
     def get_success_url(self):
         return reverse('coursework:mailing_detail', args=[self.object.pk])
 
@@ -137,8 +171,14 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy("coursework:mailing_list")
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.created_user or self.request.user.is_superuser:
+            return self.object
+        else:
+            return PermissionDenied
 
-@permission_required("coursework.can_disable_mailing")
+
 def activated_mailing(request, pk):
     """Вьюшка активации рассылки"""
     mailing = get_object_or_404(Mailing, pk=pk)

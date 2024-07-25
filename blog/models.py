@@ -7,7 +7,7 @@ from user.models import User
 class Blog(models.Model):
     """Модель блога"""
     title = models.CharField(max_length=255, verbose_name="Заголовок", help_text="Введите заголовок")
-    body = models.TextField(verbose_name="Заголовок", help_text="Введите текст")
+    body = models.TextField(verbose_name="Содержание статьи", help_text="Введите текст")
     image = models.ImageField(verbose_name="Изображение", upload_to="blog/images/", **NULLABLE)
     view_count = models.IntegerField(verbose_name="Количество просмотров", default=0)
     publicated_at = models.DateTimeField(verbose_name="Дата публикации", **NULLABLE)
