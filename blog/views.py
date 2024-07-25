@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytz, random
+from django.core.cache import cache
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
@@ -8,8 +9,9 @@ from django.contrib.auth.decorators import permission_required, login_required
 from blog.forms import BlogForm
 from blog.models import Blog
 from pytils.translit import slugify
-
+from django.views.decorators.cache import cache_page
 from config import settings
+from config.settings import CACHE_ENABLED
 from coursework.models import Mailing, Client
 
 
@@ -17,6 +19,20 @@ from coursework.models import Mailing, Client
 class BlogListView(LoginRequiredMixin, ListView):
     """Вьюшка списка статей"""
     model = Blog
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        if CACHE_ENABLED:
+            key = f'blog_list'
+            blog_list = cache.get(key)
+            if blog_list is None:
+                blog_list = Blog.objects.all()
+                cache.set(key, blog_list)
+        else:
+            blog_list = Blog.objects.all()
+
+        context['blog_list'] = blog_list
+        return context
 
     def get_queryset(self):
         if self.request.user.has_perm('blog.can_public') or self.request.user.is_superuser:
@@ -87,6 +103,8 @@ def publish_blog(request, slug):
     return redirect(reverse('blog:blog_detail', args=[slug]))
 
 
+
+@cache_page(60)
 def general_page(request):
     """Общая страница сайта"""
     active_mailing = len(Mailing.objects.filter(enable=True))
